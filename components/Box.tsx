@@ -11,7 +11,8 @@ export default function Box({ name, code }: { name: string; code: string }) {
       alignItems: "center",
     },
     text: {
-      color: "#fff",
+      color:
+        parseInt(code.replace("#", ""), 16) > 0xffffff / 1.1 ? "black" : "#fff",
     },
   });
   return (

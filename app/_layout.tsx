@@ -38,8 +38,9 @@ export default function RootLayout() {
           options={{ headerShown: false, title: "Home" }}
         />
         <Stack.Screen
-          name="[palette]"
-          options={({ route }) => ({ title: route?.params?.palette })} //dynamic param header title name
+          name="[id]"
+          options={{ headerTitle: "Palette" }}
+          // options={({ route }) => ({ title: route?.params?.id })} //dynamic param header title name
         />
         <Stack.Screen name="+not-found" />
       </Stack>

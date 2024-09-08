@@ -1,20 +1,25 @@
-import { FlatList, SafeAreaView, StyleSheet } from "react-native";
-import solarized from "@/app/colors/solarized";
-import rainbow from "@/app/colors/rainbow";
-import frontendmasters from "@/app/colors/frontendmasters";
+import {
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import PalettePreview from "@/components/PalettePreview";
-import { Link } from "expo-router";
+import { router } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 
 export default function Index() {
-  let data = [
-    { title: "Solarized", route: "solarized", data: solarized.slice(0, 5) },
-    { title: "Rainbow", route: "rainbow", data: rainbow },
-    {
-      title: "Frontend Masters",
-      route: "frontendmasters",
-      data: frontendmasters,
-    },
-  ];
+  interface Color {
+    colorName: string;
+    hexCode: string;
+  }
+  interface Palette {
+    id: number;
+    paletteName: string;
+    colors: Color[];
+  }
+
+  let [palettes, setPalettes] = useState<Palette[]>([]);
 
   const styles = StyleSheet.create({
     container: {
@@ -31,16 +36,31 @@ export default function Index() {
     },
   });
 
+  let fetchColorPalettes = useCallback(async () => {
+    let res = await fetch(
+      "https://color-palette-api.kadikraman.vercel.app/palettes",
+    );
+    let data = await res.json();
+    setPalettes(data);
+  }, []);
+
+  useEffect(() => {
+    fetchColorPalettes();
+  }, [fetchColorPalettes]);
+
   return (
     <SafeAreaView>
       <FlatList
         style={styles.container}
-        data={data}
-        keyExtractor={(item) => item.title}
+        data={palettes}
+        keyExtractor={(item) => item.paletteName}
         renderItem={({ item }) => (
-          <Link href={`/${item.route}`}>
-            <PalettePreview title={item.title} colors={item.data} />
-          </Link>
+          <TouchableOpacity onPress={() => router.push(`/${item.id}`)}>
+            <PalettePreview
+              title={item.paletteName}
+              colors={item.colors.slice(0, 5)}
+            />
+          </TouchableOpacity>
         )}
       ></FlatList>
     </SafeAreaView>

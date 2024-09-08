@@ -20,6 +20,7 @@ export default function Index() {
   }
 
   let [palettes, setPalettes] = useState<Palette[]>([]);
+  let [isRefreshing, setIsRefreshing] = useState(false);
 
   const styles = StyleSheet.create({
     container: {
@@ -37,11 +38,15 @@ export default function Index() {
   });
 
   let fetchColorPalettes = useCallback(async () => {
+    setIsRefreshing(true);
     let res = await fetch(
       "https://color-palette-api.kadikraman.vercel.app/palettes",
     );
     let data = await res.json();
     setPalettes(data);
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 1000);
   }, []);
 
   useEffect(() => {
@@ -51,6 +56,8 @@ export default function Index() {
   return (
     <SafeAreaView>
       <FlatList
+        refreshing={isRefreshing}
+        onRefresh={fetchColorPalettes}
         style={styles.container}
         data={palettes}
         keyExtractor={(item) => item.paletteName}

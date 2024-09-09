@@ -1,8 +1,12 @@
 import { useState } from "react";
-import { StyleSheet, Text, TextInput, View, Select } from "react-native";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 
 const CreatePalette = () => {
   const [number, setNumber] = useState("");
+  const [selectedLanguage, setSelectedLanguage] = useState();
+  const [showSelection, setShowSelection] = useState(false);
+
   let styles = StyleSheet.create({
     container: {
       alignItems: "center",
@@ -24,6 +28,14 @@ const CreatePalette = () => {
     },
     textarea: {
       height: 80,
+    },
+    picker: {
+      paddingBottom: 50,
+    },
+    selectOpener: {
+      padding: 5,
+      borderWidth: 1,
+      borderColor: "gray",
     },
   });
   return (
@@ -67,9 +79,29 @@ const CreatePalette = () => {
           placeholder="Please type your paragraph"
         />
       </View>
+      {/* Picker Input */}
       <View style={styles.inputWrapper}>
-        <Text style={styles.inputText}>Picker</Text>
-        <Picker></Picker>
+        <Text style={styles.inputText}>Selector</Text>
+        <Pressable
+          style={styles.selectOpener}
+          onPress={() => {
+            setShowSelection((v) => !v);
+          }}
+        >
+          <Text>Select Language</Text>
+        </Pressable>
+        {showSelection && (
+          <Picker
+            style={styles.picker}
+            selectedValue={selectedLanguage}
+            onValueChange={(itemValue, itemIndex) =>
+              setSelectedLanguage(itemValue)
+            }
+          >
+            <Picker.Item label="Java" value="java" />
+            <Picker.Item label="JavaScript" value="js" />
+          </Picker>
+        )}
       </View>
     </View>
   );

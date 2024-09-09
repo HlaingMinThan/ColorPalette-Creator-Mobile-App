@@ -1,19 +1,24 @@
-import { useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import { Picker } from "@react-native-picker/picker";
+import ColorSwitcher from "@/components/ColorSwitcher";
+import {
+  Alert,
+  Button,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import COLORS from "@/app/colors/colors";
 
 const CreatePalette = () => {
-  const [number, setNumber] = useState("");
-  const [selectedLanguage, setSelectedLanguage] = useState();
-  const [showSelection, setShowSelection] = useState(false);
-
   let styles = StyleSheet.create({
     container: {
       alignItems: "center",
       marginVertical: 20,
     },
     inputWrapper: {
-      width: "90%",
+      width: "95%",
       marginVertical: 5,
     },
     inputText: {
@@ -37,71 +42,42 @@ const CreatePalette = () => {
       borderWidth: 1,
       borderColor: "gray",
     },
+    colors_container: {
+      height: "80%",
+      marginTop: 20,
+    },
+    buttonContainer: {
+      marginTop: 20,
+      width: "80%",
+    },
+    button: {
+      padding: 10,
+      backgroundColor: "indigo",
+      borderRadius: 10,
+      width: "100%",
+    },
+    buttonText: {
+      color: "#ffffff",
+      textAlign: "center",
+    },
   });
   return (
     <View style={styles.container}>
       {/* Text Input */}
       <View style={styles.inputWrapper}>
-        <Text style={styles.inputText}>Name</Text>
+        <Text style={styles.inputText}>Name of color palette</Text>
         <TextInput style={styles.input} placeholder="Please type your name" />
       </View>
-      {/* Number Input */}
-      <View style={styles.inputWrapper}>
-        <Text style={styles.inputText}>Number only</Text>
-        <TextInput
-          keyboardType="numeric"
-          style={styles.input}
-          placeholder="Please type your phone"
-          value={number}
-          onChangeText={(text) => {
-            // Only allow numeric input
-            const numericText = text.replace(/[^0-9]/g, "");
-            setNumber(numericText);
-          }}
-        />
-      </View>
-      {/* Password Input */}
-      <View style={styles.inputWrapper}>
-        <Text style={styles.inputText}>Password</Text>
-        <TextInput
-          secureTextEntry
-          style={styles.input}
-          placeholder="Please type your password"
-        />
-      </View>
-      {/* Textarea Input */}
-      <View style={styles.inputWrapper}>
-        <Text style={styles.inputText}>Paragraph</Text>
-        <TextInput
-          multiline
-          numberOfLines={5}
-          style={[styles.input, styles.textarea]}
-          placeholder="Please type your paragraph"
-        />
-      </View>
-      {/* Picker Input */}
-      <View style={styles.inputWrapper}>
-        <Text style={styles.inputText}>Selector</Text>
-        <Pressable
-          style={styles.selectOpener}
-          onPress={() => {
-            setShowSelection((v) => !v);
-          }}
-        >
-          <Text>Select Language</Text>
+      <FlatList
+        style={styles.colors_container}
+        data={COLORS}
+        keyExtractor={(item, i) => item.hexCode + i}
+        renderItem={({ item }) => <ColorSwitcher color={item} />}
+      />
+      <View style={styles.buttonContainer}>
+        <Pressable onPress={() => Alert.alert("hi")} style={styles.button}>
+          <Text style={styles.buttonText}>Submit</Text>
         </Pressable>
-        {showSelection && (
-          <Picker
-            style={styles.picker}
-            selectedValue={selectedLanguage}
-            onValueChange={(itemValue, itemIndex) =>
-              setSelectedLanguage(itemValue)
-            }
-          >
-            <Picker.Item label="Java" value="java" />
-            <Picker.Item label="JavaScript" value="js" />
-          </Picker>
-        )}
       </View>
     </View>
   );

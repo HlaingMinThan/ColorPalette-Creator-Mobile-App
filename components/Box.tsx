@@ -1,6 +1,14 @@
 import { StyleSheet, Text, View } from "react-native";
 
-export default function Box({ name, code }: { name: string; code: string }) {
+export default function Box({
+  style,
+  name,
+  code,
+}: {
+  style: object;
+  name: string;
+  code: string;
+}) {
   let boxColor = {
     backgroundColor: code,
   };
@@ -16,7 +24,7 @@ export default function Box({ name, code }: { name: string; code: string }) {
     },
   });
   return (
-    <View style={[styles.box, boxColor]}>
+    <View style={[style, styles.box, boxColor]}>
       <Text style={styles.text}>
         {name}: #{code}
       </Text>

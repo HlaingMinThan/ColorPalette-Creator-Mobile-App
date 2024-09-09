@@ -9,13 +9,14 @@ import {
   View,
 } from "react-native";
 import COLORS from "@/app/colors/colors";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { router } from "expo-router";
 interface Color {
   colorName: string;
   hexCode: string;
 }
 const CreatePalette = () => {
+  let [name, setName] = useState("");
   let [selectedColors, setSelectedColors] = useState<Color[]>([]);
 
   let styles = StyleSheet.create({
@@ -68,24 +69,31 @@ const CreatePalette = () => {
     },
   });
 
-  useEffect(() => {
-    console.log(selectedColors);
-  }, [selectedColors]);
-
   let submit = () => {
+    if (!name) {
+      Alert.alert("Please type a name");
+      return;
+    }
     if (selectedColors.length < 3) {
       Alert.alert("Please select at least 3 colors");
       return;
     }
-    //add logic to create color palette
-    router.push("../");
+    router.navigate({
+      pathname: "/",
+      params: { name, selectedColors: JSON.stringify(selectedColors) },
+    });
   };
   return (
     <View style={styles.container}>
       {/* Text Input */}
       <View style={styles.inputWrapper}>
         <Text style={styles.inputText}>Name of color palette</Text>
-        <TextInput style={styles.input} placeholder="Please type your name" />
+        <TextInput
+          value={name}
+          onChangeText={setName}
+          style={styles.input}
+          placeholder="Please type your name"
+        />
       </View>
       <FlatList
         style={styles.colors_container}

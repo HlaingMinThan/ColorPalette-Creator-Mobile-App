@@ -7,7 +7,7 @@ import {
   View,
 } from "react-native";
 import PalettePreview from "@/components/PalettePreview";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 
 export default function Index() {
@@ -23,6 +23,27 @@ export default function Index() {
 
   let [palettes, setPalettes] = useState<Palette[]>([]);
   let [isRefreshing, setIsRefreshing] = useState(false);
+
+  const { name, selectedColors } = useLocalSearchParams<{
+    name?: string;
+    selectedColors?: string;
+  }>();
+
+  useEffect(() => {
+    if (name && selectedColors) {
+      let colors: Color[] = JSON.parse(String(selectedColors));
+      setPalettes((prev) => {
+        return [
+          {
+            id: prev.length + 1,
+            paletteName: name,
+            colors,
+          },
+          ...prev,
+        ];
+      });
+    }
+  }, [name, selectedColors]);
 
   const styles = StyleSheet.create({
     container: {

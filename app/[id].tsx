@@ -1,6 +1,6 @@
 import ColorPalette from "@/components/ColorPalette";
 import { useLocalSearchParams } from "expo-router";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function Palettes() {
   interface Color {
@@ -15,21 +15,24 @@ export default function Palettes() {
 
   let [palette, setPalette] = useState<Palette>({} as Palette);
 
-  let { id } = useLocalSearchParams();
-  let paletteId: number = Number(id);
+  const { paletteName, colors } = useLocalSearchParams<{
+    paletteName?: string;
+    colors?: string;
+  }>();
 
-  let fetchColorPalettes = useCallback(async () => {
-    let res = await fetch(
-      "https://color-palette-api.kadikraman.vercel.app/palettes",
-    );
-    let data = await res.json();
-    let palette: Palette = data.find((item: Palette) => item.id === paletteId);
-    setPalette(palette);
-  }, [paletteId]);
-
+  console.log(paletteName, colors);
   useEffect(() => {
-    fetchColorPalettes();
-  }, [fetchColorPalettes]);
+    if (paletteName && colors) {
+      console.log("hit");
+      setPalette((prev) => {
+        return {
+          id: prev.id,
+          paletteName: paletteName,
+          colors: JSON.parse(String(colors)),
+        };
+      });
+    }
+  }, [paletteName, colors]);
 
   return <ColorPalette title={palette.paletteName} colors={palette.colors} />;
 }

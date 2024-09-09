@@ -107,7 +107,18 @@ export default function Index() {
         data={palettes}
         keyExtractor={(item) => item.paletteName}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => router.push(`/${item.id}`)}>
+          <TouchableOpacity
+            onPress={() => {
+              router.navigate({
+                pathname: "/[id]",
+                params: {
+                  id: item.id,
+                  paletteName: item.paletteName,
+                  colors: JSON.stringify(item.colors),
+                },
+              });
+            }}
+          >
             <PalettePreview
               title={item.paletteName}
               colors={item.colors.slice(0, 5)}

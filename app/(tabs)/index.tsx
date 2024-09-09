@@ -2,7 +2,9 @@ import {
   FlatList,
   SafeAreaView,
   StyleSheet,
+  Text,
   TouchableOpacity,
+  View,
 } from "react-native";
 import PalettePreview from "@/components/PalettePreview";
 import { router } from "expo-router";
@@ -35,6 +37,20 @@ export default function Index() {
       fontWeight: "bold",
       fontSize: 20,
     },
+    buttonContainer: {
+      alignItems: "flex-start",
+      marginHorizontal: 10,
+    },
+    button: {
+      padding: 10,
+      backgroundColor: "indigo",
+      borderRadius: 10,
+      width: "100%",
+    },
+    buttonText: {
+      color: "#ffffff",
+      textAlign: "center",
+    },
   });
 
   let fetchColorPalettes = useCallback(async () => {
@@ -55,6 +71,14 @@ export default function Index() {
 
   return (
     <SafeAreaView>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => router.push("/palettes/create")}
+        >
+          <Text style={styles.buttonText}>Create</Text>
+        </TouchableOpacity>
+      </View>
       <FlatList
         refreshing={isRefreshing}
         onRefresh={fetchColorPalettes}

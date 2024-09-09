@@ -1,7 +1,6 @@
 import ColorSwitcher from "@/components/ColorSwitcher";
 import {
   Alert,
-  Button,
   FlatList,
   Pressable,
   StyleSheet,
@@ -10,8 +9,15 @@ import {
   View,
 } from "react-native";
 import COLORS from "@/app/colors/colors";
-
+import { useEffect, useState } from "react";
+import { router } from "expo-router";
+interface Color {
+  colorName: string;
+  hexCode: string;
+}
 const CreatePalette = () => {
+  let [selectedColors, setSelectedColors] = useState<Color[]>([]);
+
   let styles = StyleSheet.create({
     container: {
       alignItems: "center",
@@ -61,6 +67,19 @@ const CreatePalette = () => {
       textAlign: "center",
     },
   });
+
+  useEffect(() => {
+    console.log(selectedColors);
+  }, [selectedColors]);
+
+  let submit = () => {
+    if (selectedColors.length < 3) {
+      Alert.alert("Please select at least 3 colors");
+      return;
+    }
+    //add logic to create color palette
+    router.push("../");
+  };
   return (
     <View style={styles.container}>
       {/* Text Input */}
@@ -72,10 +91,23 @@ const CreatePalette = () => {
         style={styles.colors_container}
         data={COLORS}
         keyExtractor={(item, i) => item.hexCode + i}
-        renderItem={({ item }) => <ColorSwitcher color={item} />}
+        renderItem={({ item }) => (
+          <ColorSwitcher
+            color={item}
+            colorSwithOnFor={(color: Color, isOn: boolean) => {
+              if (isOn) {
+                setSelectedColors([...selectedColors, color]);
+              } else {
+                setSelectedColors(
+                  selectedColors.filter((c) => c.hexCode !== color.hexCode),
+                );
+              }
+            }}
+          />
+        )}
       />
       <View style={styles.buttonContainer}>
-        <Pressable onPress={() => Alert.alert("hi")} style={styles.button}>
+        <Pressable onPress={submit} style={styles.button}>
           <Text style={styles.buttonText}>Submit</Text>
         </Pressable>
       </View>

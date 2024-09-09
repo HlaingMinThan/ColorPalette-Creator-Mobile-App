@@ -6,7 +6,13 @@ interface Color {
   colorName: string;
   hexCode: string;
 }
-const ColorSwitcher = ({ color }: { color: Color }) => {
+const ColorSwitcher = ({
+  color,
+  colorSwithOnFor,
+}: {
+  color: Color;
+  colorSwithOnFor: Function;
+}) => {
   let [isSwitchOn, setIsSwitchOn] = useState(false);
   const styles = StyleSheet.create({
     colorSwitcherWrapper: {
@@ -35,7 +41,11 @@ const ColorSwitcher = ({ color }: { color: Color }) => {
           <SmallBox code={color.hexCode} />
           <Switch
             value={isSwitchOn}
-            onValueChange={() => setIsSwitchOn(!isSwitchOn)}
+            onValueChange={() => {
+              let updateValue = !isSwitchOn;
+              setIsSwitchOn(updateValue);
+              colorSwithOnFor(color, updateValue);
+            }}
           />
         </View>
       </View>

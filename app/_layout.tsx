@@ -42,6 +42,13 @@ export default function RootLayout() {
           options={{ headerTitle: "Palette" }}
           // options={({ route }) => ({ title: route?.params?.id })} //dynamic param header title name
         />
+        <Stack.Screen
+          name="palettes/create"
+          options={{
+            headerTitle: "Palette Create",
+            presentation: "modal",
+          }}
+        />
         <Stack.Screen name="+not-found" />
       </Stack>
     </ThemeProvider>
